@@ -2,7 +2,6 @@
 {% block content %}
 
 
-<h2> I'm extending the base template</h2>
 
 {% for task in task %}   
     {{task.task_name}}<br>
@@ -11,7 +10,7 @@
     {{task.is_urgent}}<br>
     {{task.due_date}}<br>
 {% endfor %}   
- 
+
 {% endblock %}
 
 

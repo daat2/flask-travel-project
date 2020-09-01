@@ -21,8 +21,8 @@ mongo = PyMongo(app)
 @app.route("/")
 @app.route("/get_task")
 def get_task():
-    task = list(mongo.db.task.find())
-    return render_template("task.html", task=task)
+    tasks = list(mongo.db.tasks.find())
+    return render_template("task.html", task=tasks)
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -84,7 +84,6 @@ def profile(username):
     # grab the session user's username from db
     username = mongo.db.users.find_one(
         {"username": session["user"]})["username"]
-    return render_template("profile.html", username= username)
 
     if session["user"]:
         return render_template("profile.html", username=username)
@@ -98,6 +97,7 @@ def logout():
     flash("You have been logged out")
     session.pop("user")
     return redirect(url_for("login"))
+
 
 @app.route("/add_task", methods=["GET", "POST"])
 def add_task():
@@ -138,6 +138,12 @@ def edit_task(task_id):
     categories = mongo.db.categories.find().sort("category_name", 1)
     return render_template("edit_task.html", task=task, categories=categories)
 
+
+@app.route("/delete_task/<task_id>")
+def delete_task(task_id):
+    mongo.db.tasks.remove({"_id": ObjectId(task_id)})
+    flash("Task Successfully Deleted")
+    return redirect(url_for("get_task"))
 
 
 if __name__ == "__main__":
